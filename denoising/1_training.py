@@ -43,6 +43,7 @@ def main():
     print(sorted(list(history.history.keys())))
     plt.figure(figsize=(16,5))
     plot_history(history,['loss','val_loss'],['mse','val_mse','mae','val_mae']);
+    plt.savefig(args.model_name +'_training.png')
     plt.show()
 
     # Export model to be used w/ csbdeep fiji plugins and KNIME flows

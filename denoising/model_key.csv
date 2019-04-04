@@ -1,0 +1,6 @@
+model        , date       , epochs , train_time
+planaria-1   , 2019-04-01 , 100    , 4:03
+planaria-1.2 , 2019-04-01 , 100    , 3:55
+planaria-2   , 2019-04-01 , 200    , 8:03
+planaria-3   , 2019-04-0  , 200    , 8:06
+planaria-4   , 2019-04-0  , 200    , 7:52
