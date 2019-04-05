@@ -12,6 +12,7 @@ from skimage.measure import compare_ssim as ssim
 import util
 import pandas as pd
 import seaborn as sns
+from csbdeep.data import Normalizer, PercentileNormalizer
 
 # Example shows how to make predictions on the validation data used during
 # training, not the test datasets as in the paper. Will need to set up more for
@@ -50,7 +51,8 @@ def parse_args():
                    help='axes arg for load_training_data (def: SCZYX)')
     return p.parse_args()
 
-def plot_random_examples(X_val, Y_val, model, n_images):
+def plot_random_examples(X_val, Y_val, model, n_images,
+                         normalizer=PercentileNormalizer()):
     # Generate random indexes for plotting n traning examples
     ixs = get_randint_ixs(n_images, len(Y_val)-1)
 
@@ -60,8 +62,7 @@ def plot_random_examples(X_val, Y_val, model, n_images):
         x = X_val[ix,...,0]
         axes = 'ZYX'
 
-        # None normalizer is probably wrong, but need to review the authors SI
-        restored = model.predict_probabilistic(x, axes, normalizer=None)
+        restored = model.predict_probabilistic(x, axes, normalizer=normalizer)
 
         ims = [[x, restored.mean(), y]]
         titles = [['input '+str(ix), 'prediction', 'target']]
@@ -74,7 +75,6 @@ def plot_random_examples(X_val, Y_val, model, n_images):
         x = X_val[ix,...,0]
         axes = 'ZYX'
 
-        # None normalizer is probably wrong, but need to review the authors SI
         restored = model.predict_probabilistic(x, axes, normalizer=None)
 
         i = 61
@@ -114,7 +114,7 @@ def compute_metrics(X, Y, model, model_name='model', plot=True):
     d_input = {'ssim':[], 'rmse': [], 'nrmse': []}
 
     for ix in range(len(Y)):
-        restored = util.get_prediction(model, X, ix)
+        restored = util.get_prediction(model, X, ix, PercentileNormalizer())
 
         # x,y are float32, restored im is float64
         x = np.array(X[ix,...,0], dtype='float64')
