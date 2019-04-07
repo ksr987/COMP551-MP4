@@ -21,12 +21,6 @@ def main():
     c = axes_dict(axes)['C']
     n_channel_in, n_channel_out = X.shape[c], Y.shape[c]
 
-    if args.plot:
-        plt.figure(figsize=(12,5))
-        plot_some(X_val[:5],Y_val[:5])
-        plt.suptitle('5 example validation patches (top row: source, bottom row: target)')
-        plt.show()
-
     # Model config
     config = Config(
         axes, n_channel_in, n_channel_out, probabilistic = args.prob,
@@ -44,7 +38,6 @@ def main():
     plt.figure(figsize=(16,5))
     plot_history(history,['loss','val_loss'],['mse','val_mse','mae','val_mae']);
     plt.savefig(args.model_name +'_training.png')
-    plt.show()
 
     # Export model to be used w/ csbdeep fiji plugins and KNIME flows
     model.export_TF()
@@ -63,7 +56,6 @@ def parse_args():
                    help='Porportion of training data to use for validation (def: 0.2)')
     p.add_argument('--probabilistic', action='store_true', dest='prob')
     p.add_argument('--non-probabilistic', action='store_false', dest='prob')
-    p.add_argument('--no-plot', action='store_false', dest='plot')
     p.set_defaults(prob=True, plot=True)
     return p.parse_args()
 
